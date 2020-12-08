@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1607364853 source:c:\users\zkaba\desktop\td c\squelette projet huffman\partie 1.c
+	<stdio.h>
+	<stdlib.h>
+	"Partie 1.h"
+
+1607364853 source:c:\users\zkaba\desktop\td c\squelette projet huffman\partie 2.c
+	<stdio.h>
+	<stdlib.h>
+	"Partie 2.h"
+
+1607364712 source:c:\users\zkaba\desktop\td c\squelette projet huffman\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1607364853 c:\users\zkaba\desktop\td c\squelette projet huffman\partie 1.h
+
+1607364911 c:\users\zkaba\desktop\td c\squelette projet huffman\partie 2.h
+
