@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "Partie 1.h"
 
-extern void traduire(){
+extern void translate(){
  }
 
-extern void nombre(){
+extern void number(){
  }
