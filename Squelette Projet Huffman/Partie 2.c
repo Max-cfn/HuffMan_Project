@@ -6,11 +6,11 @@ Element* create_elem_List(int lettre){
     return NULL;
 }
 
-Element* creat_list_letter(){
+Element* create_list_letter(){
     return NULL;
 }
 
-int maximum_occurence(Element* l){
+int maximum_occurrence(Element* l){
     return 0;
 }
 
@@ -20,9 +20,7 @@ int maximum_letter(Element* l){
 }
 
 
-
-
-Element* supp_element(Element** l, int maxi){
+Element* supp_element(Element** l, int occurrence, char letter){
     return NULL;
 }
 
@@ -32,7 +30,7 @@ int size_list(Element *l){
     return 0;
 }
 
-int recup_occurence(Element *l){
+int recup_occurrence(Element *l){
     return 0;
 }
 
@@ -50,7 +48,7 @@ Node* tree_huffman(Element* l){
     return NULL;
 }
 
-int nbr_occurence(Element* l){
+int nbr_occurrence(Element* l){
     return 0;
 }
 
@@ -67,10 +65,13 @@ extern void add_1_or_0(char* c, int nbr){
 extern void reset_chain(char* c){
 }
 
-int fill_chain(char* c, Tree a, Element* l){
+int fill_chain(char* c, Tree a, char letter){
     return 0;
 }
 
 extern void dico_huffman(Tree a, Element* l){
+}
+
+extern void encoding(){
 }
 
