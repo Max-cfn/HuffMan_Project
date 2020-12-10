@@ -5,5 +5,5 @@
 extern void translate(){
  }
 
-extern void number(){
+extern void count_number(){
  }
