@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include "Partie 2.h"
 
+
 Element* create_elem_List(int lettre)
+
 {
     if(lettre == EOF)
     {
@@ -12,13 +14,17 @@ Element* create_elem_List(int lettre)
     {
         Element* liste= malloc(sizeof(Element));
         liste->lettre=lettre;
+
         liste->occurrence=1;
+
         liste->next= NULL;
         return liste;
     }
 }
 
+
 Element* create_list_letter()
+
 {
     FILE* fichier = NULL;
     Element* l = NULL;
@@ -28,25 +34,31 @@ Element* create_list_letter()
 
     if(fichier != NULL)
     {
+
         l = create_elem_List(fgetc(fichier));
         while((stock = fgetc(fichier)) != EOF)
         {
             if(stock != '\n')
+
             {
                 temp = l;
                 while( ((temp->next) != NULL) && (stock != (temp->lettre)) )
                     temp = temp->next;
                 if(stock == temp->lettre)
+
                     (temp->occurrence)++;
                 else
                     temp->next = create_elem_List(stock);
+
             }
         }
     }
     return l;
 }
 
+
 int maximum_occurrence(Element* l)
+
 {
 
     Element* temp;
@@ -56,19 +68,24 @@ int maximum_occurrence(Element* l)
     {
         exit(1);
     }
+
     max=temp->occurrence;
+
 
     while(temp->next!=NULL)
     {
         temp=temp->next;
+
         if((temp->occurrence) > max)
         {
             max=temp->occurrence;
+
         }
     }
 
     return max;
 }
+
 
 int maximum_letter(Element* l)
 {
@@ -80,15 +97,19 @@ int maximum_letter(Element* l)
     {
         exit(1);
     }
+
     max=temp->occurrence;
+
 
     while(temp->next!=NULL)
     {
         temp=temp->next;
 
+
         if((temp->occurrence) > max)
         {
             max=temp->occurrence;
+
         }
     }
 
@@ -97,7 +118,9 @@ int maximum_letter(Element* l)
     while(temp!=NULL)
     {
 
+
         if (temp->occurrence == max)
+
         {
 
             max = temp->lettre;
@@ -112,24 +135,28 @@ int maximum_letter(Element* l)
 
 }
 
+
 Element* supp_element(Element** l, int occurrence, char letter)
 {
-
 
     Element* ancien;
     Element* temporel;
     Element* temp = (*l);
 
+
     if ( (temp->occurrence == occurrence) && (temp->lettre == letter))
+
     {
         (*l)=(*l)->next;
         temp->next = NULL;
         free(temp);
     }
 
+
     while(temp->next!=NULL)
     {
         if( (temp->next->occurrence == occurrence) && (temp->next->lettre == letter))
+
         {
             ancien=temp->next->next;
             temporel=temp->next;
@@ -144,9 +171,11 @@ Element* supp_element(Element** l, int occurrence, char letter)
 
 
 
+
 }
 
 int size_list(Element *l)
+
 {
 
     if (l == NULL)
@@ -156,17 +185,22 @@ int size_list(Element *l)
     }
     else
     {
+
         return 1 + size_list(l->next);
+
     }
 
 }
 
+
 int recup_occurrence(Element *l)
+
 {
     if(l==NULL)
     {
         exit(1);
     }
+
     return l->occurrence;
 }
 
@@ -175,9 +209,11 @@ Element* create_element(int nouv_info)
     Element* nouv_elem;
     nouv_elem = (Element*)malloc(sizeof(Element));
     nouv_elem->occurrence = nouv_info;
+
     nouv_elem->next = NULL;
     return nouv_elem;
 }
+
 
 Node* create_node(int occur, char letter)
 {
@@ -194,13 +230,16 @@ Node* create_node(int occur, char letter)
 Node* tree_huffman(Element* l)
 {
 
+
     if (size_list(l) == 0)
+
     {
         return NULL;
     }
 
     if (l->next == NULL)
     {
+
         return create_node(l->occurrence, l->lettre);
 
     }
@@ -218,11 +257,14 @@ Node* tree_huffman(Element* l)
     node->sad = tree_huffman(l);
 
 
+
     return node;
 
 }
 
+
 int nbr_occurrence(Element* l)
+
 {
 
     if (l == NULL)
@@ -233,7 +275,9 @@ int nbr_occurrence(Element* l)
     else
     {
 
+
         return (l->occurrence) + nbr_occurrence(l->next);
+
     }
 
 
@@ -251,7 +295,9 @@ void print_list(Element* l)
     else
     {
 
+
         printf("(%d,%c)", l->occurrence, l->lettre);
+
         print_list(l->next);
     }
 
@@ -271,12 +317,14 @@ void print_tree(Tree a)
 
         print_tree(a->sad);
         printf("(%d,%c)\n", a->occur, a->letter);
+
         print_tree(a->sag);
 
     }
 
 
 }
+
 
 extern void add_1_or_0(char* c, int nbr)
 {
@@ -285,8 +333,10 @@ extern void add_1_or_0(char* c, int nbr)
 
     while( c[cmp] != '\0')
     {
+
         cmp++;
     }
+
 
 
     if (nbr == 0)
@@ -296,9 +346,11 @@ extern void add_1_or_0(char* c, int nbr)
     else
     {
         c[cmp] = '1';
+
     }
 
     c[cmp+1] = '\0';
+
 
 
 }
@@ -310,12 +362,15 @@ extern void reset_chain(char* c)
 
 }
 
+
 int fill_chain(char* c, Tree a, char letter)
 {
+
     if ( a == NULL)
     {
         exit(1);
     }
+
 
     else if ( (a->sad == NULL) && (a->sag == NULL)  )
     {
@@ -328,6 +383,7 @@ int fill_chain(char* c, Tree a, char letter)
     }
 
     else if ( a->sag->letter == letter )
+
     {
         add_1_or_0(c, 0);
         return 0;
@@ -336,8 +392,10 @@ int fill_chain(char* c, Tree a, char letter)
     else
     {
         add_1_or_0(c, 1);
+
         return fill_chain(c, a->sad, letter);
     }
+
 }
 
 extern void dico_huffman(Tree a, Element* l)
@@ -348,14 +406,18 @@ extern void dico_huffman(Tree a, Element* l)
         return;
     }
 
+
+
     char chain[60] = "\0";
     FILE* fichier;
     fichier = fopen("dico.txt","r+");
+
 
     while ( l != NULL)
     {
 
         fill_chain(chain, a, l->lettre);
+
         fprintf(fichier, "%c:", l->lettre);
         fprintf(fichier, "%s", chain);
         fputs("\n", fichier);
@@ -367,6 +429,7 @@ extern void dico_huffman(Tree a, Element* l)
     fclose(fichier);
 
 }
+
 
 extern void encoding()
 {
@@ -409,7 +472,7 @@ extern void encoding()
         fclose(fichier3);
         return;
     }
-    else //On gère les cas d'erreur d'ouverture des fichiers
+    else //On gÃ¨re les cas d'erreur d'ouverture des fichiers
     {
         if(fichier1 == NULL)
         {
@@ -440,6 +503,7 @@ extern void encoding()
     }
     return;
 }
+
 
 
 

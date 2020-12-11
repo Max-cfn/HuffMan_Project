@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "Partie 1.h"
 
+
 void translate()
 {
 
