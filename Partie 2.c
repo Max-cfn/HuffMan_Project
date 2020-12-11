@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include "Partie 2.h"
 
-Element* create_list(int lettre)
+
+Element* create_elem_List(int lettre)
+
 {
     if(lettre == EOF)
     {
@@ -12,13 +14,17 @@ Element* create_list(int lettre)
     {
         Element* liste= malloc(sizeof(Element));
         liste->lettre=lettre;
-        liste->occurence=1;
+
+        liste->occurrence=1;
+
         liste->next= NULL;
         return liste;
     }
 }
 
-Element* creer_liste_lettres()
+
+Element* create_list_letter()
+
 {
     FILE* fichier = NULL;
     Element* l = NULL;
@@ -28,25 +34,31 @@ Element* creer_liste_lettres()
 
     if(fichier != NULL)
     {
-        l = create_list(fgetc(fichier));           //Creer 1er ÈlÈment sÈparement des autres
+
+        l = create_elem_List(fgetc(fichier));
         while((stock = fgetc(fichier)) != EOF)
         {
-            if(stock != '\n')                      //On ne comptabilise pas retour ‡ la ligne comme un caratËre
+            if(stock != '\n')
+
             {
                 temp = l;
                 while( ((temp->next) != NULL) && (stock != (temp->lettre)) )
                     temp = temp->next;
                 if(stock == temp->lettre)
-                    (temp->occurence)++;
+
+                    (temp->occurrence)++;
                 else
-                    temp->next = create_list(stock);
+                    temp->next = create_elem_List(stock);
+
             }
         }
     }
     return l;
 }
 
-int maximum_occurence(Element* l)
+
+int maximum_occurrence(Element* l)
+
 {
 
     Element* temp;
@@ -56,14 +68,18 @@ int maximum_occurence(Element* l)
     {
         exit(1);
     }
-    max=temp->occurence;
+
+    max=temp->occurrence;
+
 
     while(temp->next!=NULL)
     {
         temp=temp->next;
-        if((temp->occurence) > max)
+
+        if((temp->occurrence) > max)
         {
-            max=temp->occurence;
+            max=temp->occurrence;
+
         }
     }
 
@@ -81,15 +97,19 @@ int maximum_letter(Element* l)
     {
         exit(1);
     }
-    max=temp->occurence;
+
+    max=temp->occurrence;
+
 
     while(temp->next!=NULL)
     {
         temp=temp->next;
 
-        if((temp->occurence) > max)
+
+        if((temp->occurrence) > max)
         {
-            max=temp->occurence;
+            max=temp->occurrence;
+
         }
     }
 
@@ -98,7 +118,9 @@ int maximum_letter(Element* l)
     while(temp!=NULL)
     {
 
-        if (temp->occurence == max)
+
+        if (temp->occurrence == max)
+
         {
 
             max = temp->lettre;
@@ -114,16 +136,16 @@ int maximum_letter(Element* l)
 }
 
 
-
-
-Element* supp_element(Element** l, int maxi)
+Element* supp_element(Element** l, int occurrence, char letter)
 {
 
     Element* ancien;
     Element* temporel;
     Element* temp = (*l);
 
-    if ( temp->occurence == maxi)
+
+    if ( (temp->occurrence == occurrence) && (temp->lettre == letter))
+
     {
         (*l)=(*l)->next;
         temp->next = NULL;
@@ -133,7 +155,8 @@ Element* supp_element(Element** l, int maxi)
 
     while(temp->next!=NULL)
     {
-        if(temp->next->occurence == maxi)
+        if( (temp->next->occurrence == occurrence) && (temp->next->lettre == letter))
+
         {
             ancien=temp->next->next;
             temporel=temp->next;
@@ -145,11 +168,14 @@ Element* supp_element(Element** l, int maxi)
     }
     return *l;
 
+
+
+
+
 }
 
+int size_list(Element *l)
 
-
-int taille_liste(Element *l)
 {
 
     if (l == NULL)
@@ -159,25 +185,31 @@ int taille_liste(Element *l)
     }
     else
     {
-        return 1 + taille_liste(l->next);
+
+        return 1 + size_list(l->next);
+
     }
 
 }
 
-int recup_occurence(Element *l)
+
+int recup_occurrence(Element *l)
+
 {
     if(l==NULL)
     {
         exit(1);
     }
-    return l->occurence;
+
+    return l->occurrence;
 }
 
-Element* create_element(int nouv_info)//Ou Element* creer_el(int nouv_info)
+Element* create_element(int nouv_info)
 {
-    Element* nouv_elem;//Ou Element* nouv_elem ...etc
+    Element* nouv_elem;
     nouv_elem = (Element*)malloc(sizeof(Element));
-    nouv_elem->occurence = nouv_info;
+    nouv_elem->occurrence = nouv_info;
+
     nouv_elem->next = NULL;
     return nouv_elem;
 }
@@ -199,8 +231,8 @@ Node* tree_huffman(Element* l)
 {
 
 
+    if (size_list(l) == 0)
 
-    if (taille_liste(l) == 0)
     {
         return NULL;
     }
@@ -208,24 +240,31 @@ Node* tree_huffman(Element* l)
     if (l->next == NULL)
     {
 
-        return create_node(l->occurence, l->lettre);
+        return create_node(l->occurrence, l->lettre);
+
     }
 
+    int occurrence_max = maximum_occurrence(l);
 
     char lettre_max = maximum_letter(l);
-    int occurence_max = maximum_occurence(l);
 
+    Node* node = create_node(nbr_occurrence(l), 0);
 
-    Node* node = create_node(nbr_occurence(l), 0);
-    node->sag = create_node(occurence_max, lettre_max);
-    l = supp_element(&l, occurence_max);
+    node->sag = create_node(occurrence_max, lettre_max);
+
+    l = supp_element(&l, occurrence_max, lettre_max);
+
     node->sad = tree_huffman(l);
+
+
 
     return node;
 
 }
 
-int nbr_occurence(Element* l)
+
+int nbr_occurrence(Element* l)
+
 {
 
     if (l == NULL)
@@ -236,7 +275,9 @@ int nbr_occurence(Element* l)
     else
     {
 
-        return (l->occurence) + nbr_occurence(l->next);
+
+        return (l->occurrence) + nbr_occurrence(l->next);
+
     }
 
 
@@ -254,7 +295,9 @@ void print_list(Element* l)
     else
     {
 
-        printf("(%d,%c)", l->occurence, l->lettre);
+
+        printf("(%d,%c)", l->occurrence, l->lettre);
+
         print_list(l->next);
     }
 
@@ -273,7 +316,8 @@ void print_tree(Tree a)
 
 
         print_tree(a->sad);
-        printf("%d,%c\n", a->occur, a->letter);
+        printf("(%d,%c)\n", a->occur, a->letter);
+
         print_tree(a->sag);
 
     }
@@ -285,19 +329,15 @@ void print_tree(Tree a)
 extern void add_1_or_0(char* c, int nbr)
 {
 
-
     int cmp = 0;
 
     while( c[cmp] != '\0')
     {
-        printf("%d ", cmp);
+
         cmp++;
-
     }
-    printf("\n");
 
 
-//printf("%d  ", cmp);
 
     if (nbr == 0)
     {
@@ -309,7 +349,8 @@ extern void add_1_or_0(char* c, int nbr)
 
     }
 
-     c[cmp+1] = '\0';
+    c[cmp+1] = '\0';
+
 
 
 }
@@ -321,27 +362,28 @@ extern void reset_chain(char* c)
 
 }
 
-int fill_chain(char* c, Tree a, Element* l)
+
+int fill_chain(char* c, Tree a, char letter)
 {
-
-    int taille = taille_liste(l);
-
-    if (taille == 1)
-    {
-        add_1_or_0(c, 0);
-        return 0;
-    }
 
     if ( a == NULL)
     {
         exit(1);
     }
+
+
     else if ( (a->sad == NULL) && (a->sag == NULL)  )
     {
+        if(a->letter != letter)
+        {
+            printf("letter \"%c\" is not in tree", letter);
+            exit(1);
+        }
         return 0;
     }
 
-    else if ( a->sag->letter == l->lettre )
+    else if ( a->sag->letter == letter )
+
     {
         add_1_or_0(c, 0);
         return 0;
@@ -350,7 +392,8 @@ int fill_chain(char* c, Tree a, Element* l)
     else
     {
         add_1_or_0(c, 1);
-        return fill_chain(c, a->sad, l);
+
+        return fill_chain(c, a->sad, letter);
     }
 
 }
@@ -364,19 +407,17 @@ extern void dico_huffman(Tree a, Element* l)
     }
 
 
+
     char chain[60] = "\0";
     FILE* fichier;
     fichier = fopen("dico.txt","r+");
 
-    char h[] = "888888888888888888888";
-    fprintf(fichier, "%s", h);
 
     while ( l != NULL)
     {
 
-        fill_chain(chain, a, l);
+        fill_chain(chain, a, l->lettre);
 
-        printf("chaine = %s, lettre = %c\n", chain, l->lettre);
         fprintf(fichier, "%c:", l->lettre);
         fprintf(fichier, "%s", chain);
         fputs("\n", fichier);
@@ -388,4 +429,83 @@ extern void dico_huffman(Tree a, Element* l)
     fclose(fichier);
 
 }
+
+
+extern void encoding()
+{
+
+    FILE* fichier1 = NULL;
+    FILE* fichier2 = NULL;
+    FILE* fichier3 = NULL;
+
+    fichier1=fopen("entree.txt","r");
+    fichier2=fopen("dico.txt", "r");
+    fichier3=fopen("sortieCompressee.txt","a");
+
+
+    if( (fichier1 != NULL) && (fichier2 != NULL) && (fichier3 != NULL) )
+    {
+
+        int char_fichier1;
+        int char_fichier2;
+        int char_fichier3;
+
+
+        while( (char_fichier1 = fgetc(fichier1)) != EOF )
+        {
+            while( (char_fichier2 = fgetc(fichier2)) != EOF )
+            {
+                if ( (char_fichier2 == char_fichier1) )
+                {
+                    fseek(fichier2,2, SEEK_CUR);
+                    while( (char_fichier3 = fgetc(fichier2)) != '\n')
+                    {
+                        fputc(char_fichier3, fichier3);
+                    }
+                    fseek(fichier2,0, SEEK_END);
+                }
+            }
+            rewind(fichier2);
+        }
+        fclose(fichier1);
+        fclose(fichier2);
+        fclose(fichier3);
+        return;
+    }
+    else //On g√®re les cas d'erreur d'ouverture des fichiers
+    {
+        if(fichier1 == NULL)
+        {
+
+            if(fichier2 == NULL)
+            {
+
+                if(fichier3 == NULL)
+                    printf("Erreur d'ouverture de l'un des fichiers");
+                exit(1);
+
+            }
+            else if( fichier3 == NULL )
+            {
+                printf("Erreur d'ouverture du fichier sortieCompressee");
+                exit(1);
+            }
+        }
+        else if(fichier2 == NULL)
+        {
+            if(fichier3 == NULL)
+            {
+                printf("Erreur d'ouverture de l'un des fichiers");
+                exit(1);
+            }
+
+        }
+    }
+    return;
+}
+
+
+
+
+
 
